@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Moxxy — закладки карточками",
   "short_name": "Moxxy",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Закладки Chrome на весь экран в виде карточек с картинками, описаниями и действиями.",
   "permissions": ["bookmarks", "tabGroups", "storage", "unlimitedStorage", "tabs", "scripting", "favicon"],
   "host_permissions": ["<all_urls>"],
