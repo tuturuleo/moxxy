@@ -1,0 +1,48 @@
+# Builds the extension on every push to main. When the version in package.json has no release yet,
+# publishes GitHub release v<version> with moxxy-<version>.zip attached.
+# To ship an update: bump "version" in package.json and push.
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build and pack
+        run: npm run release
+
+      - name: Version
+        id: v
+        run: echo "version=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: moxxy-${{ steps.v.outputs.version }}
+          path: release/moxxy-${{ steps.v.outputs.version }}.zip
+
+      - name: Publish release (once per version)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.v.outputs.version }}
+        run: |
+          if gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists — bump the version in package.json to publish a new one."
+          else
+            gh release create "v$VERSION" "release/moxxy-$VERSION.zip" --title "Moxxy $VERSION" --generate-notes
+          fi
