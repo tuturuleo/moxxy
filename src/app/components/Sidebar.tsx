@@ -1,6 +1,7 @@
 import { useState, type DragEvent } from 'react'
 import { DUPES } from '../../lib/dupes'
 import type { Collection, Snapshot } from '../../lib/sources'
+import { repoUrl } from '../../lib/updates'
 
 export const GROUP_COLORS: Record<string, string> = {
   grey: '#9aa0a6', blue: '#8ab4f8', red: '#f28b82', yellow: '#fdd663', green: '#81c995',
@@ -110,6 +111,17 @@ export function Sidebar({ snap, current, dupeCount, onSelect, onDropItem }: Prop
         <div className="section-title">Закладки</div>
         {/* Chrome's system folders (Bookmarks bar / Other / Mobile) are hidden while empty */}
         {snap.bookmarkRoots.map((k) => snap.collections.get(k)!).filter((c) => c.count > 0 || c.children.length > 0 || c.key === current).map((c) => row(c, 0))}
+      </div>
+      <div className="side-foot">
+        Moxxy {chrome.runtime.getManifest().version}
+        {repoUrl() && (
+          <>
+            {' · '}
+            <a href={repoUrl()} target="_blank" rel="noreferrer">
+              GitHub
+            </a>
+          </>
+        )}
       </div>
     </aside>
   )

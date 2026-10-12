@@ -90,7 +90,7 @@
     }
   }
   window.chrome = {
-    runtime: { getURL: (p) => (p.startsWith('/_favicon') ? `https://www.google.com/s2/favicons?domain=${new URL(decodeURIComponent(p.split('pageUrl=')[1].split('&')[0])).hostname}&sz=64` : p), onMessage: ev(), sendMessage: async () => {} },
+    runtime: { getManifest: () => ({ version: '0.2.0', homepage_url: 'https://github.com/tuturuleo/moxxy' }), getURL: (p) => (p.startsWith('/_favicon') ? `https://www.google.com/s2/favicons?domain=${new URL(decodeURIComponent(p.split('pageUrl=')[1].split('&')[0])).hostname}&sz=64` : p), onMessage: ev(), sendMessage: async () => {} },
     storage: { local: { get: async (k) => ({ [k]: store[k] }), set: async (o) => Object.assign(store, o), remove: async (k) => delete store[k] } },
     bookmarks: { getTree: async () => structuredClone(tree), getSubTree: async (i) => [structuredClone(findNode(tree, i))], getChildren: async (i) => findNode(tree, i)?.children ?? [],
       onCreated: ev(), onRemoved: ev(), onChanged: ev(), onMoved: ev(), onChildrenReordered: ev(), onImportEnded: ev(), create: async (b) => ({ id: String(++id), ...b }), update: async () => {}, remove: async () => {}, move: async () => {} },
